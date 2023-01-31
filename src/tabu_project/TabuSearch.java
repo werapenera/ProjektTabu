@@ -30,12 +30,12 @@ public class TabuSearch {
 
 		swaped_worker_list.set(worker_pair.get(0), worker_pair.get(1));
 		swaped_worker_list.set(worker_pair.get(1), worker_pair.get(0));
-
 		return swaped_worker_list;
 	}
 
 	public static List<Integer> generate_pair_for_swap(List<List<Integer>> workers_and_tasks) {
 
+		List<Integer> worker_index_pair = new ArrayList<>();
 		Random random = new Random();
 
 		int randomly_generated_first_worker_index = random.nextInt(workers_and_tasks.size());
@@ -46,8 +46,9 @@ public class TabuSearch {
 		}
 
 		// musimy sprawdzić czy jest na liście tabu
-
-		return null;
+		worker_index_pair.add(randomly_generated_first_worker_index);
+		worker_index_pair.add(randomly_generated_second_worker_index);
+		return worker_index_pair;
 	}
 
 	public static int calcualte_total_time(List<Integer> list_of_worker_index, List<List<Integer>> workers_and_tasks) {

@@ -34,7 +34,7 @@ public class main {
 		System.out.println(randomly_generated_worker_list.size());
 		
 		List<Integer> result = TabuSearch.tabu_search(randomly_generated_worker_list, data);
-		
+		System.out.println(TabuSearch.calcualte_total_time(result, data));
 	}
 	
 
