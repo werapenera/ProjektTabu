@@ -1,1 +1,3 @@
 # ProjektTabu
+- tu będą rzeczy
+- 
