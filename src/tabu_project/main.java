@@ -43,6 +43,16 @@ public class main {
 		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(first_worker_index_combination, data));
 		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result, data));
 		
+		
+		List<Integer> result3 = TabuSearch.tabu_search_aspiracja(first_worker_index_combination, data);
+		System.out.println("\nUSPRAWNIENIE 2\n(LISTA POCZĄTKOWA NIE JEST LOSOWA) + kryterium aspiracji");
+		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(first_worker_index_combination, data));
+		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result, data));
+		
+		System.out.println("\nPRZYPADEK BAZOWY + kryterium aspiracji");
+		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
+		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result3, data));
+		
 	}
 	
 
