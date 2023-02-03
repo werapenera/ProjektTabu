@@ -21,23 +21,28 @@ public class main {
 		// pionowo pracownik
 		// poziomo jest zadanie
 
-		//List<Integer> first_worker_index_combination = generate_first_combination(data);
-		// print_list_of_numbers(first_worker_index_combination);
-
-		//System.out.println(calcualte_total_cost(first_worker_index_combination, data));
+		List<Integer> first_worker_index_combination = generate_first_combination(data);
 		List<Integer> randomly_generated_worker_list = assign_randomly_withought_repetitions(data);
-		System.out.println(TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
 		System.out.println("");
-		
+		print_list_of_numbers(first_worker_index_combination);
+		System.out.println("");
 		print_list_of_numbers(randomly_generated_worker_list);
+		//System.out.println(calcualte_total_cost(first_worker_index_combination, data));
+		//System.out.println(TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
 		System.out.println("");
-		System.out.println(randomly_generated_worker_list.size());
 		
-		List<Integer> result = TabuSearch.tabu_search(randomly_generated_worker_list, data);
-		System.out.println(TabuSearch.calcualte_total_time(result, data));
 		
 		List<Integer> result2 = TabuSearch.tabu_search(randomly_generated_worker_list, data);
-		System.out.println(TabuSearch.calcualte_total_time(result2, data));
+		
+		System.out.println("\nMinimalizacja: chcemy aby koszt był jak najniższy \n\nPRZYPADEK BAZOWY");
+		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
+		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result2, data));
+		
+		List<Integer> result = TabuSearch.tabu_search(first_worker_index_combination, data);
+		System.out.println("\nUSPRAWNIENIE\n(LISTA POCZĄTKOWA NIE JEST LOSOWA)");
+		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(first_worker_index_combination, data));
+		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result, data));
+		
 	}
 	
 
