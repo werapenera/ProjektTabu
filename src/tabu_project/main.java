@@ -36,22 +36,54 @@ public class main {
 			//BASE CASE
 			System.out.println("Ammount of time spend on tasks for initial combination");
 			List<Integer> initial_list = TabuSearch.generate_first_combination(data);
-			
+			List<Integer> initial_list2 = TabuSearch.generate_first_combination_pick_best_worker_for_each_task(data);
 			//FIRST MODIFICATION
 			//System.out.println("Ammount of time spend on tasks for initial combination\nModification - we pick best worker for each task");
 			//List<Integer> initial_list = TabuSearch.generate_first_combination_pick_best_worker_for_each_task(data);
 	
 		
 			System.out.println(TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(initial_list, data));
+			System.out.println(TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(initial_list2, data));
 			
 			System.out.println("---------------------------");
 			System.out.println("Ammount of time spend on tasks after tabu search (10 trials)");
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < 20; j++) {
 				List<Integer> list_after_tabu_search = TabuSearch.tabu_search(initial_list, data);
 				System.out.println(
 						TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(list_after_tabu_search, data));
 			}
 			System.out.println();
+			
+			System.out.println("---------------------------");
+			System.out.println("Ammount of time spend on tasks after tabu search with aspiration (10 trials)");
+			for (int j = 0; j < 20; j++) {
+				List<Integer> list_after_tabu_search = TabuSearch.tabu_search_with_aspiration(initial_list, data);
+				System.out.println(
+						TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(list_after_tabu_search, data));
+			}
+			System.out.println();
+			
+			System.out.println("Ammount of time spend on tasks for initial combination\nModification - we pick best worker for each task");
+			
+			
+			System.out.println("---------------------------");
+			System.out.println("Ammount of time spend on tasks after tabu search with aspiration  (10 trials)");
+			for (int j = 0; j < 20; j++) {
+				List<Integer> list_after_tabu_search = TabuSearch.tabu_search(initial_list2, data);
+				System.out.println(
+						TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(list_after_tabu_search, data));
+			}
+			System.out.println();
+			
+			System.out.println("---------------------------");
+			System.out.println("Ammount of time spend on tasks for initial combination\\nModification - we pick best worker for each task\" + aspiration (10 trials)");
+			for (int j = 0; j < 20; j++) {
+				List<Integer> list_after_tabu_search = TabuSearch.tabu_search_with_aspiration(initial_list2, data);
+				System.out.println(
+						TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(list_after_tabu_search, data));
+			}
+			System.out.println();
+			
 
 		}
 	}

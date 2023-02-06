@@ -60,6 +60,40 @@ public class TabuSearch {
 		return final_assignment;
 	}
 
+	
+	public static List<Integer> tabu_search_with_aspiration(List<Integer> initial_list, List<List<Double>> data) {
+		List<Integer> final_assignment = new ArrayList<>(initial_list);
+		List<TabuElement> tabu_list = new ArrayList<TabuElement>();
+		int MAX_ITER = 1000000;
+		int MAX_TABU_LENGTH = 100;
+
+		for (int i = 0; i < MAX_ITER; i++) {
+
+			List<Integer> assignment_worker_pair = generate_assignment_worker_pair(data, final_assignment);
+			TabuElement element = new TabuElement(initial_list.get(assignment_worker_pair.get(0)),
+					assignment_worker_pair.get(0), assignment_worker_pair.get(1));
+
+			if (!Tabu.is_element_on_list(tabu_list, element)) {
+				List<Integer> new_assignement = change_assignment(final_assignment, assignment_worker_pair);
+				double new_assignment_time_spend = calculate_total_ammount_of_time_spend_on_tasks(new_assignement, data);
+				double final_assignment_time_spend = calculate_total_ammount_of_time_spend_on_tasks(final_assignment, data);
+				
+				// Kryterium aspiracji
+				if (new_assignment_time_spend < final_assignment_time_spend 
+					|| (new_assignment_time_spend == final_assignment_time_spend && 
+					Tabu.is_element_on_list(tabu_list, element))) {
+					
+					final_assignment = new ArrayList<>(new_assignement);
+					tabu_list = Tabu.add_element_to_tabu_list(tabu_list, element, MAX_TABU_LENGTH);
+				}
+			}
+		}
+
+		return final_assignment;
+	}
+	
+	
+	
 	private static List<Integer> generate_assignment_worker_pair(List<List<Double>> data, List<Integer> initial_list) {
 		Random random = new Random();
 		List<Integer> assignment_worker_pair = new ArrayList<>();
