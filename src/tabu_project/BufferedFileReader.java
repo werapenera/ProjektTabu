@@ -8,11 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BufferedFileReader {
-	public static List<String> readFile() {
+	public static List<String> readFile(String filename) {
 		List<String> fileContent = new ArrayList<String>();
 
-		//try (BufferedReader br = new BufferedReader(new FileReader("assign500.txt"))) {
-		try (BufferedReader br = new BufferedReader(new FileReader("assign100.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String sCurrentLine;
 
 			while ((sCurrentLine = br.readLine()) != null) {
@@ -23,31 +22,72 @@ public class BufferedFileReader {
 		}
 		return fileContent;
 	}
-	public static List<String> parseFileContentLineIntoList(List<String> fileContent) {
-		List<String> data = new ArrayList<>();
-		for (int i = 1; i < fileContent.size(); i++) {
-			List<String> oneLine = new ArrayList<>();
-			oneLine = Arrays.asList(fileContent.get(i).trim().split(" "));
-			data.addAll(oneLine);
-		
+
+	public static List<List<String>> split_string_list(List<String> string_list) {
+		List<List<String>> list_of_lists = new ArrayList<>();
+		for (int i = 0; i < string_list.size(); i++) {
+			String unsplited_elements = string_list.get(i);
+			List<String> splited_elements = new ArrayList<>();
+			splited_elements = Arrays.asList(unsplited_elements.split(" "));
+			list_of_lists.add(splited_elements);
 		}
-		return data;
+		return list_of_lists;
 	}
-	
-	public static List<List<Integer>> prepare_list_of_integers(List<String> list){
-		List<List<Integer>> listOfLists = new ArrayList<>();
-		List<Integer> acumulator = new ArrayList<>();
-		
-		
-		for (int i = 0; i < list.size(); i++) {
-			acumulator.add(Integer.parseInt( list.get(i)));
-			//if(acumulator.size()>=500) {
-			if(acumulator.size()>=100) {
-				listOfLists.add(acumulator);
-				acumulator = new ArrayList<>();
+
+	public static List<Double> parse_string_list_of_double(List<List<String>> old_list) {
+		List<Double> parsed_elements = new ArrayList<>();
+
+		for (int i = 0; i < old_list.size(); i++) {
+			for (int j = 0; j < old_list.get(i).size(); j++) {
+				if (old_list.get(i).get(j).equals(" ")||old_list.get(i).get(j).equals("")) {
+					}else {
+					double num = Double.parseDouble(old_list.get(i).get(j));
+					parsed_elements.add(num);
+				}
 			}
 		}
-		
-		return listOfLists;
+		return parsed_elements;
+	}
+
+	public static List<Double> cut_off_non_data_information(List<Double> old_list) {
+		List<Double> elements = new ArrayList<>();
+
+		for (int i = 2; i < old_list.size(); i++) {
+			elements.add(old_list.get(i));
+		}
+		return elements;
+	}
+
+	public static List<List<Double>> cut_list_into_smaller_lists(List<Double> old_list,
+			int ammount_of_elements_in_one_list, int ammount_of_lists) {
+		List<List<Double>> list_of_lists = new ArrayList<>();
+		int current_index = 0;
+
+		for (int i = 0; i < ammount_of_lists; i++) {
+			List<Double> small_list = new ArrayList<>();
+
+			for (int j = 0; j < ammount_of_elements_in_one_list; j++) {
+				small_list.add(old_list.get(current_index));
+				current_index++;
+			}
+			list_of_lists.add(small_list);
+
+		}
+		return list_of_lists;
+	}
+
+	public static void print_list_of_lists(List<List<Double>> list) {
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < list.get(i).size(); j++) {
+				System.out.print(list.get(i).get(j) + " | ");
+			}
+			System.out.println();
+		}
+	}
+	public static void print_list(List<Integer> list) {
+			for (int j = 0; j < list.size(); j++) {
+				System.out.print(list.get(j) + " | ");
+			}
+			System.out.println();
 	}
 }

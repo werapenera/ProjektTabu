@@ -3,6 +3,7 @@ package tabu_project;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,103 +11,48 @@ import java.util.Iterator;
 public class main {
 
 	public static void main(String[] args) {
-		List<String> fileContent = BufferedFileReader.readFile();
-		List<String> rawData = BufferedFileReader.parseFileContentLineIntoList(fileContent);
-		List<List<Integer>> data = BufferedFileReader.prepare_list_of_integers(rawData);
 
-		//System.out.println(data.size());
-		//System.out.println(data.get(0).size());
+		ArrayList<String> filenames = new ArrayList<>(
+				Arrays.asList("a05100", "a05200", "a10100", "a10200", "a20100", "a20200"));
 
-		// pierwszy jest indeks pracownika a drugi index zadania
-		// pionowo pracownik
-		// poziomo jest zadanie
+		for (int i = 0; i < filenames.size(); i++) {
 
-		List<Integer> first_worker_index_combination = generate_first_combination(data);
-		List<Integer> randomly_generated_worker_list = assign_randomly_withought_repetitions(data);
-		System.out.println("");
-		print_list_of_numbers(first_worker_index_combination);
-		System.out.println("");
-		print_list_of_numbers(randomly_generated_worker_list);
-		//System.out.println(calcualte_total_cost(first_worker_index_combination, data));
-		//System.out.println(TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
-		System.out.println("");
-		
-		
-		List<Integer> result2 = TabuSearch.tabu_search(randomly_generated_worker_list, data);
-		
-		System.out.println("\nMinimalizacja: chcemy aby koszt był jak najniższy \n\nPRZYPADEK BAZOWY");
-		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
-		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result2, data));
-		
-		List<Integer> result = TabuSearch.tabu_search(first_worker_index_combination, data);
-		System.out.println("\nUSPRAWNIENIE\n(LISTA POCZĄTKOWA NIE JEST LOSOWA)");
-		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(first_worker_index_combination, data));
-		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result, data));
-		
-		
-		List<Integer> result3 = TabuSearch.tabu_search_aspiracja(first_worker_index_combination, data);
-		System.out.println("\nUSPRAWNIENIE 2\n(LISTA POCZĄTKOWA NIE JEST LOSOWA) + kryterium aspiracji");
-		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(first_worker_index_combination, data));
-		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result, data));
-		
-		System.out.println("\nPRZYPADEK BAZOWY + kryterium aspiracji");
-		System.out.println("Koszt początkowy: "+TabuSearch.calcualte_total_time(randomly_generated_worker_list, data));
-		System.out.println("Koszt po algorytmie: "+TabuSearch.calcualte_total_time(result3, data));
-		
-	}
+			System.out.println("--------{" + filenames.get(i) + "}--------");
+
+			List<String> file_content = BufferedFileReader.readFile(filenames.get(i));
+			List<List<String>> unparsed_data = BufferedFileReader.split_string_list(file_content);
+			List<Double> parsed_data = BufferedFileReader.parse_string_list_of_double(unparsed_data);
+			int ammount_of_lists = (int) Math.round(parsed_data.get(0));
+			int ammount_of_elemnts_on_list = (int) Math.round(parsed_data.get(1));
+			List<Double> pure_data = BufferedFileReader.cut_off_non_data_information(parsed_data);
+			List<List<Double>> data = BufferedFileReader.cut_list_into_smaller_lists(pure_data,
+					ammount_of_elemnts_on_list, ammount_of_lists);
+
+
+			System.out.println("Ammount of  tasks  = " + ammount_of_elemnts_on_list);
+			System.out.println("Ammount of workers = " + ammount_of_lists);
+			System.out.println("---------------------------");
+			
+			//BASE CASE
+			System.out.println("Ammount of time spend on tasks for initial combination");
+			List<Integer> initial_list = TabuSearch.generate_first_combination(data);
+			
+			//FIRST MODIFICATION
+			//System.out.println("Ammount of time spend on tasks for initial combination\nModification - we pick best worker for each task");
+			//List<Integer> initial_list = TabuSearch.generate_first_combination_pick_best_worker_for_each_task(data);
 	
-
-	public static List<Integer> assign_randomly_withought_repetitions(List<List<Integer>> data) {
-		List<Integer> list_of_worker_index = new ArrayList<>();
-
-		for (int task_index = 0; task_index < data.get(0).size(); task_index++) {
-
-			Random random = new Random();
-
-			int randomly_generated_worker_index = random.nextInt(data.size());
-
-			while (is_on_worker_list(randomly_generated_worker_index, list_of_worker_index)) {
-				randomly_generated_worker_index = random.nextInt(data.size());
+		
+			System.out.println(TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(initial_list, data));
+			
+			System.out.println("---------------------------");
+			System.out.println("Ammount of time spend on tasks after tabu search (10 trials)");
+			for (int j = 0; j < 10; j++) {
+				List<Integer> list_after_tabu_search = TabuSearch.tabu_search(initial_list, data);
+				System.out.println(
+						TabuSearch.calculate_total_ammount_of_time_spend_on_tasks(list_after_tabu_search, data));
 			}
-			list_of_worker_index.add(randomly_generated_worker_index);
-		}
-		return list_of_worker_index;
-	}
+			System.out.println();
 
-	public static List<Integer> generate_first_combination(List<List<Integer>> data) {
-		List<Integer> list_of_worker_index = new ArrayList<>();
-
-		for (int task_index = 0; task_index < data.get(0).size(); task_index++) {
-			int cost_of_performing_the_task = 9000000;
-			int most_eficient_worker_index = -1;
-
-			for (int worker_index = 0; worker_index < data.size(); worker_index++) {
-				int current_cost_performing_task = data.get(worker_index).get(task_index);
-
-				if ((current_cost_performing_task < cost_of_performing_the_task)
-						&& (!is_on_worker_list(worker_index, list_of_worker_index))) {
-					most_eficient_worker_index = worker_index;
-					cost_of_performing_the_task = current_cost_performing_task;
-				}
-
-			}
-			list_of_worker_index.add(most_eficient_worker_index);
-		}
-		return list_of_worker_index;
-	}
-
-	public static boolean is_on_worker_list(int worker_index, List<Integer> list_of_worker_index) {
-		return list_of_worker_index.contains(worker_index);
-	}
-	
-
-
-	public static void print_list_of_numbers(List<Integer> list_of_numbers) {
-		for (int i = 0; i < list_of_numbers.size(); i++) {
-			if (i % 10 == 0) {
-				System.out.println();
-			}
-			System.out.print(list_of_numbers.get(i).toString() + "|");
 		}
 	}
 

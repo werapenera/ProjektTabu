@@ -5,10 +5,9 @@ import java.util.List;
 
 public class Tabu {
 	public static boolean elements_are_identical(TabuElement first_element, TabuElement second_element) {
-		if (first_element.index_worker1 == second_element.index_worker1
-				&& first_element.index_worker2 == second_element.index_worker2
-				&& first_element.index_task1 == second_element.index_task1
-				&& first_element.index_task2 == second_element.index_task2) {
+		if (first_element.index_worker_before == second_element.index_worker_before
+				&& first_element.index_worker_after == second_element.index_worker_after
+				&& first_element.index_task == second_element.index_task) {
 			return true;
 		}
 		return false;
